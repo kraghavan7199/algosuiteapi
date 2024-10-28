@@ -4,9 +4,7 @@ import { UserRepository } from './src/infrastructure/UsersRepository';
 import { IUserRepository } from './src/domain/IUserRepository';
 import { IAuthService } from './src/domain/services/IAuthService';
 import { AuthService } from './src/domain/services/AuthService';
-import { LoginUser } from './src/application/LoginUser';
 import { AuthMiddleware } from './src/config/AuthGuard';
-import { RegisterUser } from './src/application/RegisterUser';
 import { IStringService } from './src/domain/services/IStringService';
 import { StringService } from './src/domain/services/StringService';
 import { PerformSubstringCalculations } from './src/application/String/PerformSubstringAlgorithms';
@@ -21,26 +19,40 @@ import { GetBinaryTreeCalculations } from './src/application/BinaryTree/GetBinar
 import { GetUserById } from './src/application/Users/GetUserById';
 import { GetUserStringsHistory } from './src/application/String/GetUserStringsHistory';
 import { GetUserTree } from './src/application/BinaryTree/GetUserTree';
+import { RegisterUser } from './src/application/Auth/RegisterUser';
+import { LoginUser } from './src/application/Auth/LoginUser';
 
 const container = new Container();
 
-container.bind(Database).toSelf().inSingletonScope();
+ // Config Binding
 
-container.bind<IUserRepository>('userRepo').to(UserRepository);
-container.bind<IAuthService>('authService').to(AuthService);
+container.bind(Database).toSelf().inSingletonScope();
+container.bind<AuthMiddleware>('authMiddleware').to(AuthMiddleware);
+
+//Feature Binding
+
 container.bind<LoginUser>('loginUser').to(LoginUser);
 container.bind<RegisterUser>('registerUser').to(RegisterUser);
-container.bind<AuthMiddleware>('authMiddleware').to(AuthMiddleware);
-container.bind<IStringService>('stringService').to(StringService);
-container.bind<PerformSubstringCalculations>('performSubstringCalculations').to(PerformSubstringCalculations);
-container.bind<IStringRepository>('stringRepository').to(StringRepository);
-container.bind<ITreeRepository>('treeRepo').to(TreeRepository);
-container.bind<ITreeService>('treeService').to(TreeService);
-container.bind<SaveBinaryTree>('saveBinaryTree').to(SaveBinaryTree);
-container.bind<GetBinaryTreeCalculations>('getBinaryTreeCalculations').to(GetBinaryTreeCalculations);
-
 container.bind<GetUserById>('getUserById').to(GetUserById);
 container.bind<GetUserStringsHistory>('getUserStringsHistory').to(GetUserStringsHistory);
 container.bind<GetUserTree>('getUserTree').to(GetUserTree);
+container.bind<SaveBinaryTree>('saveBinaryTree').to(SaveBinaryTree);
+container.bind<GetBinaryTreeCalculations>('getBinaryTreeCalculations').to(GetBinaryTreeCalculations);
+container.bind<PerformSubstringCalculations>('performSubstringCalculations').to(PerformSubstringCalculations);
+
+
+//Service Binding
+
+container.bind<IStringService>('stringService').to(StringService);
+container.bind<ITreeService>('treeService').to(TreeService);
+container.bind<IAuthService>('authService').to(AuthService);
+
+
+//Repo Binding
+
+container.bind<IUserRepository>('userRepo').to(UserRepository);
+container.bind<ITreeRepository>('treeRepo').to(TreeRepository);
+container.bind<IStringRepository>('stringRepository').to(StringRepository);
+
 
 export{ container }

@@ -14,10 +14,20 @@ export class GetUserById extends Operation {
     async execute(userId: number) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
-        const result = await this.userRepository.getUser(userId);
+        try {
 
-        if(result && result[0]) {
-            this.emit(SUCCESS, {userId: result[0].id, email: result[0].email})
+            if (!userId) {
+                this.emit(BADREQUEST, 'User Id Is Required');
+                return;
+            }
+
+            const result = await this.userRepository.getUser(userId);
+
+            this.emit(SUCCESS, result)
+            return;
+        } catch (error) {
+            this.emit(ERROR, error)
         }
+
     }
 }

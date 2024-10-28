@@ -11,13 +11,29 @@ export class PerformSubstringCalculations extends Operation {
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
     }
 
-    async execute(payload: {inputString: string, userId: number}) {
+    async execute(payload: { inputString: string, userId: number }) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
-       const result = await this.authService.performSubstringCalculations(payload.inputString, payload.userId);
-       if(result) {
-              this.emit(SUCCESS, result);
-             return;
-       }
-    }   
+        try {
+
+            if (!payload.inputString) {
+                this.emit(BADREQUEST, 'No Input String');
+                return;
+            }
+
+            if (!payload.userId) {
+                this.emit(BADREQUEST, 'No User Id Present');
+                return;
+            }
+
+            const result = await this.authService.performSubstringCalculations(payload.inputString, payload.userId);
+            if (result) {
+                this.emit(SUCCESS, result);
+                return;
+            }
+        } catch (error) {
+            this.emit(ERROR, error);
+            return;
+        }
+    }
 }

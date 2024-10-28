@@ -14,11 +14,19 @@ export class GetUserStringsHistory extends Operation {
 
     async execute(userId: number) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
+        try {
+            if (!userId) {
+                this.emit(BADREQUEST, 'User Id Required');
+                return;
+            }
 
-        const result = await this.stringRepository.getUserStringHistory(userId);
-        if (result) {
-            this.emit(SUCCESS, result);
-            return;
+            const result = await this.stringRepository.getUserStringHistory(userId);
+            if (result) {
+                this.emit(SUCCESS, result);
+                return;
+            }
+        } catch (error) {
+            this.emit(ERROR, error)
         }
     }
 }

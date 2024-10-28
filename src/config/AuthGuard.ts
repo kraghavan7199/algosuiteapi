@@ -27,6 +27,7 @@ export class AuthMiddleware extends BaseMiddleware {
         if (!payload) {
             return;
         }  
+        console.log(payload)
         asyncLocalStorage.run({}, () => {
             setRequestContext({ id: payload.userId });
             next();

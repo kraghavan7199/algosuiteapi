@@ -3,17 +3,21 @@ import { sign, verify } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from 'dotenv';
 import { IUserRepository } from "../IUserRepository";
+import { IAuthService } from "./IAuthService";
 dotenv.config();
 
 @injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
     constructor(
         @inject('userRepo') private userRepository: IUserRepository
     ) {}
 
-    async register(email: string, password: string) {
+    async register(name: string, email: string, password: string) {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await this.userRepository.createUser(email, hashedPassword);
+        const result = await this.userRepository.createUser(name, email, hashedPassword);
+        if(result && result) {
+            return sign({ userId: result.userId }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+        }
     }
 
     async login(email: string, password: string): Promise<string | null> {

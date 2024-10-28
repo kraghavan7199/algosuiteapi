@@ -28,6 +28,9 @@ export class TreeController extends BaseHttpController {
         const userId = store?.user?.id;
 
         this.saveBinaryTreeFeature.on(SUCCESS, result => res.json(result));
+        this.saveBinaryTreeFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
+        this.saveBinaryTreeFeature.on(ERROR, err => { throw (err); });
+
         await this.saveBinaryTreeFeature.execute({ tree, userId: userId ? +userId : 0 })
     }
 
@@ -37,6 +40,8 @@ export class TreeController extends BaseHttpController {
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.getBinaryTreeCalculationsFeature.on(SUCCESS, result => res.json(result));
+        this.getBinaryTreeCalculationsFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
+        this.getBinaryTreeCalculationsFeature.on(ERROR, err => { throw (err); });
         await this.getBinaryTreeCalculationsFeature.execute({ userId, type: type });
 
     }
@@ -47,6 +52,8 @@ export class TreeController extends BaseHttpController {
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.getUserTreeFeature.on(SUCCESS, result => res.json(result));
+        this.getUserTreeFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
+        this.getUserTreeFeature.on(ERROR, err => { throw (err); });
         await this.getUserTreeFeature.execute(userId ? +userId : 0);
     }
 }

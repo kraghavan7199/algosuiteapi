@@ -21,11 +21,11 @@ export class StringController extends BaseHttpController {
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.performSubstringCalculationsFeature.on(SUCCESS, result => res.json(result));
+        this.performSubstringCalculationsFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
+        this.performSubstringCalculationsFeature.on(ERROR, err => { throw (err); });
+
         await this.performSubstringCalculationsFeature.execute({inputString: inputString, userId: userId ? +userId : 0 })
-
-
     }
-
 
     @httpGet('/history', 'authMiddleware')
     public async getUserStringHistory( @request() req: express.Request, @response() res: express.Response) {
@@ -34,6 +34,8 @@ export class StringController extends BaseHttpController {
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.getUserStringsHistoryFeature.on(SUCCESS, result => res.json(result));
+        this.getUserStringsHistoryFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
+        this.getUserStringsHistoryFeature.on(ERROR, err => { throw (err); });
         await this.getUserStringsHistoryFeature.execute( userId ? +userId : 0)
 
     }
