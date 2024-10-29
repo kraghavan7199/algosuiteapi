@@ -12,7 +12,7 @@ export class GetUserStringsHistory extends Operation {
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
     }
 
-    async execute(userId: number) {
+    async execute(criteria: {limit: number, skip: number}, userId: number) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
         try {
             if (!userId) {
@@ -20,7 +20,7 @@ export class GetUserStringsHistory extends Operation {
                 return;
             }
 
-            const result = await this.stringRepository.getUserStringHistory(userId);
+            const result = await this.stringRepository.getUserStringHistory(criteria.limit, criteria.skip, userId);
             if (result) {
                 this.emit(SUCCESS, result);
                 return;

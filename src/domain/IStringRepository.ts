@@ -2,6 +2,6 @@ import { SubstringData } from "./Models/SubstringData";
 
 export interface IStringRepository {
     addSubstringData(payload: SubstringData): any;
-    getUserStringHistory(userId: number): any;
+    getUserStringHistory(limit: number, skip:number, userId: number): any;
     
 }

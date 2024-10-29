@@ -20,7 +20,7 @@ export class GetUserTree extends Operation {
        const result = await this.treeRepo.getUserTree(userId);
 
        if(result) {
-              this.emit(SUCCESS, {tree : result[0].tree});
+              this.emit(SUCCESS, {tree : result && result[0] ? result[0].tree : null });
              return;
        }
     }   

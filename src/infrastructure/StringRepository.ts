@@ -15,8 +15,8 @@ export class StringRepository implements IStringRepository {
         return result;
     }
 
-    async getUserStringHistory(userId: number) {
-        const result = await this.db.query(`SELECT * FROM strings.usersubstringanalysis WHERE user_id = $1`, [userId]);
+    async getUserStringHistory(limit: number, skip: number, userId: number) {
+        const result = await this.db.query(`SELECT * FROM strings.usersubstringanalysis WHERE user_id = $1 ORDER BY created_at DESC LIMIT ${limit} OFFSET ${skip} ROWS `, [userId]);
         return result
     }
 

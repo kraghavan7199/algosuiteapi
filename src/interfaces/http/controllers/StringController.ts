@@ -31,12 +31,15 @@ export class StringController extends BaseHttpController {
     public async getUserStringHistory( @request() req: express.Request, @response() res: express.Response) {
         const { SUCCESS, BADREQUEST , ERROR} = this.getUserStringsHistoryFeature.outputs;
 
+        const criteria = JSON.parse(<any>req.query.criteria || '{}');
+        criteria.limit = 10;
+        criteria.skip = 0;
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.getUserStringsHistoryFeature.on(SUCCESS, result => res.json(result));
         this.getUserStringsHistoryFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
         this.getUserStringsHistoryFeature.on(ERROR, err => { throw (err); });
-        await this.getUserStringsHistoryFeature.execute( userId ? +userId : 0)
+        await this.getUserStringsHistoryFeature.execute(criteria, userId ? +userId : 0)
 
     }
 }
