@@ -9,6 +9,7 @@ export class StringRepository implements IStringRepository {
 
 
     constructor(@inject(Database) private db: Database) { }
+  
 
     async addSubstringData(payload: SubstringData) {
         const result =  await this.db.query(`SELECT * FROM strings.addsubstringdata($1, $2, $3, $4)`, [payload.string, payload.longestSubstringLength, payload.uniqueSubstring, payload.userId]);
@@ -18,6 +19,10 @@ export class StringRepository implements IStringRepository {
     async getUserStringHistory(limit: number, skip: number, userId: number) {
         const result = await this.db.query(`SELECT * FROM strings.usersubstringanalysis WHERE user_id = $1 ORDER BY created_at DESC LIMIT ${limit} OFFSET ${skip} ROWS `, [userId]);
         return result
+    }
+
+    async getStringSuggestions(searchKey: string) {
+        return ['cash', 'cake','sasd','ajsdk']
     }
 
 

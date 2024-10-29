@@ -22,6 +22,8 @@ export class TreeService implements ITreeService {
 
     async calculateMaxBetweenTwoNodes(treeId: number) {
 
+    const tree = await this.treeRepo.getUserTree(treeId);
+    return this.maxBetweenTwoNodes(tree[0].tree)
     }
 
 

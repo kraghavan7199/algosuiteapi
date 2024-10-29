@@ -40,6 +40,10 @@ export class StringController extends BaseHttpController {
         this.getUserStringsHistoryFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
         this.getUserStringsHistoryFeature.on(ERROR, err => { throw (err); });
         await this.getUserStringsHistoryFeature.execute(criteria, userId ? +userId : 0)
+    }
+
+    @httpGet('/suggestions', 'authMiddleware')
+    public async getStringSuggestions(@request() req: express.Request, @response() res: express.Response) {
 
     }
 }
