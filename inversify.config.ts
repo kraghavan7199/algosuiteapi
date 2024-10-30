@@ -21,6 +21,8 @@ import { GetUserStringsHistory } from './src/application/String/GetUserStringsHi
 import { GetUserTree } from './src/application/BinaryTree/GetUserTree';
 import { RegisterUser } from './src/application/Auth/RegisterUser';
 import { LoginUser } from './src/application/Auth/LoginUser';
+import { GetStringSuggestions } from './src/application/String/GetStringSuggestions';
+import { GenerateBinaryTree } from './src/application/BinaryTree/GenerateBinaryTree';
 
 const container = new Container();
 
@@ -39,6 +41,8 @@ container.bind<GetUserTree>('getUserTree').to(GetUserTree);
 container.bind<SaveBinaryTree>('saveBinaryTree').to(SaveBinaryTree);
 container.bind<GetBinaryTreeCalculations>('getBinaryTreeCalculations').to(GetBinaryTreeCalculations);
 container.bind<PerformSubstringCalculations>('performSubstringCalculations').to(PerformSubstringCalculations);
+container.bind<GetStringSuggestions>('getStringSuggestions').to(GetStringSuggestions);
+container.bind<GenerateBinaryTree>('generateBinaryTree').to(GenerateBinaryTree);
 
 
 //Service Binding

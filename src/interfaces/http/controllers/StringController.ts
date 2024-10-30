@@ -5,13 +5,15 @@ import * as HttpStatus from 'http-status';
 import { PerformSubstringCalculations } from "../../../application/String/PerformSubstringAlgorithms";
 import { asyncLocalStorage } from "../../../contexts/Request-Context";
 import { GetUserStringsHistory } from "../../../application/String/GetUserStringsHistory";
+import { GetStringSuggestions } from "../../../application/String/GetStringSuggestions";
 
 
 @controller('/string')
 export class StringController extends BaseHttpController {
 
     @inject('performSubstringCalculations') private performSubstringCalculationsFeature!: PerformSubstringCalculations;
-    @inject('getUserStringsHistory') private getUserStringsHistoryFeature!: GetUserStringsHistory;
+    @inject('getUserStringsHistory') private getUserStringsHistoryFeature!: GetUserStringsHistory; 
+    @inject('getStringSuggestions') private getStringSuggestionsFeature!: GetStringSuggestions;
 
     @httpGet('/:string/substrings', 'authMiddleware')
     public async getSubstringData(@requestParam('string') inputString: string , @request() req: express.Request, @response() res: express.Response) {
@@ -32,8 +34,8 @@ export class StringController extends BaseHttpController {
         const { SUCCESS, BADREQUEST , ERROR} = this.getUserStringsHistoryFeature.outputs;
 
         const criteria = JSON.parse(<any>req.query.criteria || '{}');
-        criteria.limit = 10;
-        criteria.skip = 0;
+        criteria.limit = criteria.limit || 10;
+        criteria.skip = criteria.skip || 0;
         const store = asyncLocalStorage.getStore();
         const userId = store?.user?.id;
         this.getUserStringsHistoryFeature.on(SUCCESS, result => res.json(result));
@@ -42,8 +44,14 @@ export class StringController extends BaseHttpController {
         await this.getUserStringsHistoryFeature.execute(criteria, userId ? +userId : 0)
     }
 
-    @httpGet('/suggestions', 'authMiddleware')
-    public async getStringSuggestions(@request() req: express.Request, @response() res: express.Response) {
+    @httpGet('/:searchKey/suggestions', 'authMiddleware')
+    public async getStringSuggestions(@requestParam('searchKey') searchKey: string, @request() req: express.Request, @response() res: express.Response) {
+        const { SUCCESS, BADREQUEST , ERROR} = this.getStringSuggestionsFeature.outputs;
 
+        this.getStringSuggestionsFeature.on(SUCCESS, result => res.json(result));
+        this.getStringSuggestionsFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
+        this.getStringSuggestionsFeature.on(ERROR, err => { throw (err); });
+
+        await this.getStringSuggestionsFeature.execute(searchKey)
     }
 }

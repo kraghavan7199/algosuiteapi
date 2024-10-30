@@ -8,21 +8,22 @@ import { ITreeService } from "../../domain/services/ITreeService";
 
 
 @injectable()
-export class GetUserTree extends Operation {
-    constructor(@inject('treeRepo') private treeRepo: ITreeRepository) {
+export class GenerateBinaryTree extends Operation {
+    constructor(@inject('treeRepo') private treeRepo: ITreeRepository,
+    @inject('treeService') private treeService: ITreeService) {
         super();
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
     }
 
-    async execute(userId : number) {
+    async execute(depth: number ,userId : number) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
-       const result = await this.treeRepo.getUserTree(userId);
-       console.log(result)
+        const tree = this.treeService.generateBinaryTree(depth);
+        console.log(tree)
 
-       if(result) {
-              this.emit(SUCCESS, {tree : result && result[0] ? result[0].tree : null });
-             return;
-       }
+         await this.treeRepo.addTree({tree: tree, userId: userId})
+
+         this.emit(SUCCESS, tree);
+
     }   
 }

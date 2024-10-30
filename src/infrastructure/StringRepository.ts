@@ -22,7 +22,12 @@ export class StringRepository implements IStringRepository {
     }
 
     async getStringSuggestions(searchKey: string) {
-        return ['cash', 'cake','sasd','ajsdk']
+        const result = await this.db.query(
+            `SELECT word FROM strings.words WHERE word ILIKE $1 LIMIT 10`, 
+            [`${searchKey}%`]
+        );
+        return (result || []).map(result => result.word);
+      
     }
 
 

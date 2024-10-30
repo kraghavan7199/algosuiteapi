@@ -6,6 +6,7 @@ import { SaveBinaryTree } from "../../../application/BinaryTree/SaveBinaryTree";
 import { asyncLocalStorage } from "../../../contexts/Request-Context";
 import { GetBinaryTreeCalculations } from "../../../application/BinaryTree/GetBinaryTreeCalculations";
 import { GetUserTree } from "../../../application/BinaryTree/GetUserTree";
+import { GenerateBinaryTree } from "../../../application/BinaryTree/GenerateBinaryTree";
 
 
 
@@ -15,8 +16,9 @@ import { GetUserTree } from "../../../application/BinaryTree/GetUserTree";
 export class TreeController extends BaseHttpController {
 
     @inject('saveBinaryTree') private saveBinaryTreeFeature!: SaveBinaryTree;
-    @inject('getBinaryTreeCalculations') private getBinaryTreeCalculationsFeature!: GetBinaryTreeCalculations;
+    @inject('getBinaryTreeCalculations') private getBinaryTreeCalculationsFeature!: GetBinaryTreeCalculations; 
     @inject('getUserTree') private getUserTreeFeature!: GetUserTree;
+    @inject('generateBinaryTree') private generateBinaryTreeFeature!: GenerateBinaryTree;
 
     @httpPost('', 'authMiddleware')
     public async saveBinaryTree(@request() req: express.Request, @response() res: express.Response) {
@@ -55,5 +57,19 @@ export class TreeController extends BaseHttpController {
         this.getUserTreeFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
         this.getUserTreeFeature.on(ERROR, err => { throw (err); });
         await this.getUserTreeFeature.execute(userId ? +userId : 0);
+    }
+
+    @httpPost('/generate', 'authMiddleware')
+    public async generateBinaryTree(@request() req: express.Request, @response() res: express.Response) {
+        const { SUCCESS, BADREQUEST, ERROR } = this.generateBinaryTreeFeature.outputs;
+        const store = asyncLocalStorage.getStore();
+        const userId = store?.user?.id;
+
+        const {depth} = req.body;
+        this.generateBinaryTreeFeature.on(SUCCESS, result => res.json(result));
+        this.generateBinaryTreeFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
+        this.generateBinaryTreeFeature.on(ERROR, err => { throw (err); });
+        console.log('here')
+        await this.generateBinaryTreeFeature.execute(depth, userId ? +userId : 0);
     }
 }
