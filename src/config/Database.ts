@@ -1,31 +1,34 @@
 import { injectable } from 'inversify';
-import { Client, Pool, PoolClient } from 'pg';
+import { Pool, PoolClient } from 'pg';
 
 @injectable()
 export class Database {
-    private client: Client;
+    private pool: Pool;
 
     constructor() {
-        this.client = new Client({
-            connectionString: process.env.DATABASE_URL,
+        this.pool = new Pool({
+            connectionString : process.env.DATABASE_URL,
             ssl: { rejectUnauthorized: false }
-        });
+          });
+
+
     }
 
     async query(text: string, params?: any[]) {
+        const client = await this.pool.connect();
         try {
-            const result = await this.client.query(text, params);
+            const result = await client.query(text, params);
             return result.rows;
-        } catch (err: any) {
-            console.error('Error executing query:', err.message);
-            throw err; 
+        } finally {
+            client.release();
         }
     }
 
     async connect(): Promise<void> {
         try {
-            await this.client.connect();
+            const client: PoolClient = await this.pool.connect();
             console.log('Connected to PostgreSQL');
+            client.release();
         } catch (err: any) {
             console.error('Error connecting to PostgreSQL:', err.message);
         }
