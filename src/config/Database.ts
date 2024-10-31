@@ -8,7 +8,7 @@ export class Database {
     constructor() {
         this.pool = new Pool({
             connectionString : process.env.DATABASE_URL,
-            ssl: true
+            ssl: { rejectUnauthorized: false}
           });
 
 
