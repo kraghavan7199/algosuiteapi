@@ -30,7 +30,7 @@ export class LoginUser extends Operation {
                 this.emit(SUCCESS, { token: jwtCode });
                 return;
             }
-            this.emit(ERROR, 'Invalid Credentials')
+            this.emit(BADREQUEST, 'Invalid Credentials')
         } catch (error) {
             this.emit(ERROR, error)
         }

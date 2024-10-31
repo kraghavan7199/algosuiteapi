@@ -69,7 +69,6 @@ export class TreeController extends BaseHttpController {
         this.generateBinaryTreeFeature.on(SUCCESS, result => res.json(result));
         this.generateBinaryTreeFeature.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));
         this.generateBinaryTreeFeature.on(ERROR, err => { throw (err); });
-        console.log('here')
         await this.generateBinaryTreeFeature.execute(depth, userId ? +userId : 0);
     }
 }

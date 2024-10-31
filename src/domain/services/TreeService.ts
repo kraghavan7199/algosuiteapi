@@ -13,6 +13,9 @@ export class TreeService implements ITreeService {
         @inject('treeRepo') private treeRepo: ITreeRepository
     ) { }
 
+    maxSum = -Infinity;
+    maxPath: any = [];
+    
 
     maxLeafToNodeSum(node: TreeNode | null): any {
         if (!node) return { sum: 0, path: [] };
@@ -35,61 +38,65 @@ export class TreeService implements ITreeService {
     }
 
     maxBetweenTwoNodes(root: TreeNode): any {
-        const state = {
-            maxSum: Number.NEGATIVE_INFINITY,
-            maxPath: []
-        }
-        this.calculateNodeGain(root, state);
+        if (!root) return { maxSum: 0, maxPath: [] };
+        
+        this.maxSum = -Infinity;
+        this.maxPath = [];
+        this.findMaxPath(root);
         
         return {
-            sum: state.maxSum,
-            path: state.maxPath
+            sum: this.maxSum,
+            path: this.maxPath
         };
+    
     }
 
-    calculateNodeGain(
-        node: TreeNode,
-        state: any
-    ):any {
-        if (!node) {
-            return { gain: 0, path: [] };
-        }
-    
-        // Get maximum gains and paths from left and right subtrees
-        const leftResult = node.left ? this.calculateNodeGain(node.left, state) : { gain: 0, path: [] };
-        const rightResult = node.right ? this.calculateNodeGain(node.right, state) : { gain: 0, path: [] };
-    
-        // Calculate gains, considering negative values as 0
-        const leftGain = Math.max(0, leftResult.gain);
-        const rightGain = Math.max(0, rightResult.gain);
-    
-        // Calculate current path sum using both branches
-        const currentPathSum = node.value + leftGain + rightGain;
-    
-        // If this path is the best so far, update maxSum and maxPath in state
-        if (currentPathSum > state.maxSum) {
-            state.maxSum = currentPathSum;
-            state.maxPath = [
-                ...leftResult.path,
-                node.uniqueId,
-                ...rightResult.path
-            ].filter(id => id); 
+
+
+    findMaxPath(node: any): any {
+        if (!node) return { sum: 0, path: [] };
+
+        const leftResult = this.findMaxPath(node.left);
+        const rightResult = this.findMaxPath(node.right);
+
+        const leftSum = Math.max(0, leftResult.sum);
+        const rightSum = Math.max(0, rightResult.sum);
+
+        const fullPathSum = leftSum + node.value + rightSum;
+
+        if (fullPathSum > this.maxSum) {
+            this.maxSum = fullPathSum;
+            
+            let newPath: number[] = [];
+            
+            if (leftSum > 0) {
+                newPath = [...leftResult.path];
+            }
+            
+            newPath.push(node.uniqueId);
+            
+            if (rightSum > 0) {
+                newPath = [...newPath, ...rightResult.path];
+            }
+            
+            this.maxPath = newPath;
         }
 
-        const bestChildGain = Math.max(leftGain, rightGain);
-        const bestChildPath = leftGain > rightGain ? leftResult.path : rightResult.path;
-    
+        const maxBranchSum = node.value + Math.max(leftSum, rightSum);
         return {
-            gain: node.value + bestChildGain,
-            path: bestChildGain > 0 ? [...bestChildPath, node.uniqueId] : [node.uniqueId]
+            sum: maxBranchSum,
+            path: leftSum > rightSum ? 
+                [...leftResult.path, node.uniqueId] :
+                [node.uniqueId, ...rightResult.path]
         };
     }
+
 
     generateBinaryTree(depth: number): TreeNode | undefined {
         if (depth <= 0) {
             return undefined;
         }
-    
+
         return this.buildTreeNode(depth, depth);
     }
 
@@ -97,25 +104,49 @@ export class TreeService implements ITreeService {
         if (currentDepth <= 0) {
             return undefined;
         }
-    
+
         const node: TreeNode = {
             value: Math.floor(Math.random() * 100) + 1,
             uniqueId: uuidv4()
         };
 
         const probability = currentDepth / maxDepth;
-        
+
         if (Math.random() < probability) {
             node.left = this.buildTreeNode(currentDepth - 1, maxDepth);
         }
-        
+
         if (Math.random() < probability) {
             node.right = this.buildTreeNode(currentDepth - 1, maxDepth);
         }
-    
+
         return node;
     }
 
+    isValidTree(root: any ) {
+        if (root === null) return true;
 
-   
+        const queue: (TreeNode | null)[] = [root];
+        while (queue.length > 0) {
+            const node = queue.shift();
+            if (node === null) continue;
+
+            if (node!.left) {
+                if (node!.left === root) return false;
+                queue.push(node!.left);
+            }
+            
+            if (node!.right) {
+                if (node!.right === root) return false;
+                queue.push(node!.right);
+            }
+
+        }
+
+        return true;
+
+    }
+
+
+
 }

@@ -18,7 +18,6 @@ export class GetUserTree extends Operation {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
        const result = await this.treeRepo.getUserTree(userId);
-       console.log(result)
 
        if(result) {
               this.emit(SUCCESS, {tree : result && result[0] ? result[0].tree : null });

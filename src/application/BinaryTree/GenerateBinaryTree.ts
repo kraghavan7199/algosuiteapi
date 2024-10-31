@@ -19,7 +19,6 @@ export class GenerateBinaryTree extends Operation {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
         const tree = this.treeService.generateBinaryTree(depth);
-        console.log(tree)
 
          await this.treeRepo.addTree({tree: tree, userId: userId})
 
