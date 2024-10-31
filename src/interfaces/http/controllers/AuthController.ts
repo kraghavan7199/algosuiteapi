@@ -32,6 +32,8 @@ export class AuthController extends BaseHttpController {
 
         const {email, password} = req.body;
 
+        console.log('CALLEDs')
+
         this.loginUser.on(SUCCESS, result => res.json(result));
         this.loginUser.on(BADREQUEST, err => res.status(HttpStatus.BAD_REQUEST).send(err));                                                                                                                                                                                 
         this.loginUser.on(ERROR, err => { throw (err); });
