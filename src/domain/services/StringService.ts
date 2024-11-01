@@ -38,6 +38,8 @@ export class StringService implements IStringService {
         }
       }
     }
+
+    
     return result;
   }
 

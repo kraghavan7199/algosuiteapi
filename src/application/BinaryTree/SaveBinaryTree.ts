@@ -22,10 +22,7 @@ export class SaveBinaryTree extends Operation {
                 return;
             }
 
-            if(!payload.tree) {
-                this.emit(BADREQUEST, 'Tree Is Required');
-                return;
-            }
+       
 
             const result = await this.treeRepo.addTree(payload);
             if(result) {

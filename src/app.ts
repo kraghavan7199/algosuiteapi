@@ -36,7 +36,7 @@ app.listen(port, () => {
 function createRateLimiter() {
   return rateLimit({
     windowMs: 30 * 60 * 1000, 
-    max: 100,
+    max: 10000,
     standardHeaders: true,
     legacyHeaders: false,
     message: 'Too many requests, please try again later',
