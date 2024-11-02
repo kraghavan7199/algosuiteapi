@@ -11,7 +11,7 @@ export class StringService implements IStringService {
     @inject('stringRepository') private stringRepository: IStringRepository
   ) { }
 
-
+//Function To Return Substring Analysis
   async performSubstringCalculations(inputString: string, userid: number) {
     const uniqueSubstrings = this.findUniqueSubstrings(inputString);
     const longestLength = this.findLongestUniqueSubstring(inputString);
@@ -38,8 +38,6 @@ export class StringService implements IStringService {
         }
       }
     }
-
-    
     return result;
   }
 

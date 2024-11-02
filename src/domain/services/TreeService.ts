@@ -15,8 +15,9 @@ export class TreeService implements ITreeService {
 
     maxSum = -Infinity;
     maxPath: any = [];
-    
 
+
+    // Function To Calculate Max Sum Path From Leaf To Node
     maxLeafToNodeSum(node: TreeNode | null): any {
         if (!node) return { sum: 0, path: [] };
         if (!node.left && !node.right) return { sum: node.value, path: [node.uniqueId] };
@@ -37,61 +38,58 @@ export class TreeService implements ITreeService {
         }
     }
 
+    // Function To Calculate The Max Sum Path between two nodes
     maxBetweenTwoNodes(root: TreeNode): any {
         if (!root) return { maxSum: 0, maxPath: [] };
-        
+
         this.maxSum = -Infinity;
         this.maxPath = [];
         this.findMaxPath(root);
-        
+
         return {
             sum: this.maxSum,
             path: this.maxPath
         };
-    
+
     }
-
-
 
     findMaxPath(node: any): any {
         if (!node) return { sum: 0, path: [] };
 
         const leftResult = this.findMaxPath(node.left);
         const rightResult = this.findMaxPath(node.right);
-
         const leftSum = Math.max(0, leftResult.sum);
         const rightSum = Math.max(0, rightResult.sum);
-
         const fullPathSum = leftSum + node.value + rightSum;
 
         if (fullPathSum > this.maxSum) {
             this.maxSum = fullPathSum;
-            
+
             let newPath: number[] = [];
-            
+
             if (leftSum > 0) {
                 newPath = [...leftResult.path];
             }
-            
+
             newPath.push(node.uniqueId);
-            
+
             if (rightSum > 0) {
                 newPath = [...newPath, ...rightResult.path];
             }
-            
+
             this.maxPath = newPath;
         }
 
         const maxBranchSum = node.value + Math.max(leftSum, rightSum);
         return {
             sum: maxBranchSum,
-            path: leftSum > rightSum ? 
+            path: leftSum > rightSum ?
                 [...leftResult.path, node.uniqueId] :
                 [node.uniqueId, ...rightResult.path]
         };
     }
 
-
+    // Function To Create Randomized Binary Tree Of A Given Depth
     generateBinaryTree(depth: number): TreeNode | undefined {
         if (depth <= 0) {
             return undefined;
@@ -123,7 +121,8 @@ export class TreeService implements ITreeService {
         return node;
     }
 
-    isValidTree(root: any ) {
+
+    isValidTree(root: any) {
         if (root === null) return true;
 
         const queue: (TreeNode | null)[] = [root];
@@ -135,7 +134,7 @@ export class TreeService implements ITreeService {
                 if (node!.left === root) return false;
                 queue.push(node!.left);
             }
-            
+
             if (node!.right) {
                 if (node!.right === root) return false;
                 queue.push(node!.right);
@@ -144,9 +143,5 @@ export class TreeService implements ITreeService {
         }
 
         return true;
-
     }
-
-
-
 }

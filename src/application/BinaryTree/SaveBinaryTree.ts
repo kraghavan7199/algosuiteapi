@@ -12,28 +12,26 @@ export class SaveBinaryTree extends Operation {
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
     }
 
-    async execute(payload : any) {
+    async execute(payload: any) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
         try {
 
-            if(!payload.userId) {
+            if (!payload.userId) {
                 this.emit(BADREQUEST, 'User Id Required');
                 return;
             }
 
-       
-
             const result = await this.treeRepo.addTree(payload);
-            if(result) {
-                   this.emit(SUCCESS, result);
-                  return;
+            if (result) {
+                this.emit(SUCCESS, result);
+                return;
             }
-        }catch(error) {
+        } catch (error) {
             this.emit(ERROR, error);
             return;
         }
 
-     
-    }   
+
+    }
 }

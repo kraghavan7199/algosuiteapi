@@ -1,9 +1,7 @@
 
 import { inject, injectable } from "inversify";
-import { IStringService } from "../../domain/services/IStringService";
 import { Operation } from "../Operatrion";
 import { ITreeRepository } from "../../domain/ITreeRepository";
-import { ITreeService } from "../../domain/services/ITreeService";
 
 
 
@@ -14,14 +12,23 @@ export class GetUserTree extends Operation {
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
     }
 
-    async execute(userId : number) {
+    async execute(userId: number) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
-       const result = await this.treeRepo.getUserTree(userId);
+        try {
 
-       if(result) {
-              this.emit(SUCCESS, {tree : result && result[0] ? result[0].tree : null });
-             return;
-       }
-    }   
+            if (!userId) {
+                this.emit(BADREQUEST, 'User Id is required');
+                return;
+            }
+
+            const result = await this.treeRepo.getUserTree(userId);
+
+            this.emit(SUCCESS, result ? result : { tree: null });
+            return;
+        } catch (error) {
+            this.emit(ERROR, error)
+        }
+
+    }
 }
