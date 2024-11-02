@@ -30,5 +30,10 @@ export class StringRepository implements IStringRepository {
       
     }
 
+    async searchStringAnalysisHistory(string: string) {
+        const result = await this.db.query('SELECT * FROM strings.usersubstringanalysis WHERE input_string = $1', [string]);
+        return result;
+    }
+
 
 }
