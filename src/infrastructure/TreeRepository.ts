@@ -10,7 +10,7 @@ export class TreeRepository implements ITreeRepository {
  
     async addTree(payload: any) {
         const result =  await this.db.query(`SELECT * FROM tree.addtree($1, $2, $3)`, [payload.tree, payload.userId, payload.maxSumPath]);
-        return result;
+        return true;
     }
 
     async getTreeById(id: number) {
