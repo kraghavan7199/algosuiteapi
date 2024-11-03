@@ -6,7 +6,7 @@ import { IUserRepository } from "../../domain/IUserRepository";
 
 
 @injectable()
-export class RegisterUser extends Operation {
+export class AdminRegister extends Operation {
     constructor(@inject('authService') private authService: IAuthService,
         @inject('userRepo') private userRepository: IUserRepository) {
         super();
@@ -33,14 +33,14 @@ export class RegisterUser extends Operation {
                 return;
             }
 
-            const user = await this.userRepository.getUserByEmail(payload.email, 'user');
+            const user = await this.userRepository.getUserByEmail(payload.email, 'admin');
 
             if (user) {
                 this.emit(BADREQUEST, 'User Already Exists');
                 return;
             }
 
-            const jwtCode = await this.authService.register(payload.name, payload.email, payload.password, 'user');
+            const jwtCode = await this.authService.register(payload.name, payload.email, payload.password, 'admin');
             if (jwtCode) {
                 this.emit(SUCCESS, { token: jwtCode });
                 return;

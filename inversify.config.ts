@@ -23,6 +23,12 @@ import { RegisterUser } from './src/application/Auth/RegisterUser';
 import { LoginUser } from './src/application/Auth/LoginUser';
 import { GetStringSuggestions } from './src/application/String/GetStringSuggestions';
 import { GenerateBinaryTree } from './src/application/BinaryTree/GenerateBinaryTree';
+import { AdminRegister } from './src/application/AdminAuth/AdminRegister';
+import { AdminLogin } from './src/application/AdminAuth/AdminLogin';
+import { AdminAuthMiddleware } from './src/config/AdminAuthGuard';
+import { GetAdminData } from './src/application/Admin/GetAdminData';
+import { GetAllUsers } from './src/application/Admin/GetAllUsers';
+import { ChangeUserBlockStatus } from './src/application/Admin/BlockUser';
 
 const container = new Container();
 
@@ -30,6 +36,7 @@ const container = new Container();
 
 container.bind(Database).toSelf().inSingletonScope();
 container.bind<AuthMiddleware>('authMiddleware').to(AuthMiddleware);
+container.bind<AdminAuthMiddleware>('adminAuthMiddleware').to(AdminAuthMiddleware);
 
 //Feature Binding
 
@@ -43,6 +50,11 @@ container.bind<GetBinaryTreeCalculations>('getBinaryTreeCalculations').to(GetBin
 container.bind<PerformSubstringCalculations>('performSubstringCalculations').to(PerformSubstringCalculations);
 container.bind<GetStringSuggestions>('getStringSuggestions').to(GetStringSuggestions);
 container.bind<GenerateBinaryTree>('generateBinaryTree').to(GenerateBinaryTree);
+container.bind<AdminRegister>('adminRegister').to(AdminRegister);
+container.bind<AdminLogin>('adminLogin').to(AdminLogin);
+container.bind<GetAdminData>('getAdminData').to(GetAdminData);
+container.bind<GetAllUsers>('getAllUsers').to(GetAllUsers);
+container.bind<ChangeUserBlockStatus>('changeUserBlockStatus').to(ChangeUserBlockStatus);
 
 
 //Service Binding

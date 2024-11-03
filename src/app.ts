@@ -4,6 +4,7 @@ import express from 'express';
 import './interfaces/http/controllers/TreeController'
 import './interfaces/http/controllers/AuthController'
 import './interfaces/http/controllers/StringController'
+import './interfaces/http/controllers/AdminController'
 import { container } from '../inversify.config';
 import { Database } from './config/Database';
 import dotenv from 'dotenv';

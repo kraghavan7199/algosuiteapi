@@ -18,7 +18,6 @@ export class GetBinaryTreeCalculations extends Operation {
     async execute(payload: any) {
         const { SUCCESS, BADREQUEST, ERROR } = this.outputs;
 
-
         try {
             const userTreeData = await this.treeRepo.getUserTree(payload.userId);
             if (!(userTreeData)) {
@@ -29,7 +28,6 @@ export class GetBinaryTreeCalculations extends Operation {
                 this.emit(SUCCESS, userTreeData.maxSumPath[payload.type]);
                 return;
             }
-
 
             const calculationFunctionMap: any = {
                 'maxLeafToNode': () => this.treeService.maxLeafToNodeSum(userTreeData.tree),
@@ -44,10 +42,7 @@ export class GetBinaryTreeCalculations extends Operation {
                 }
 
                 userTreeData.maxSumPath[payload.type] = result;
-
                 await this.treeRepo.addTree(userTreeData);
-
-
                 this.emit(SUCCESS, result);
                 return;
             }

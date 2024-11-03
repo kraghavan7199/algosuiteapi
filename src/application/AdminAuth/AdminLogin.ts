@@ -6,7 +6,7 @@ import { IAuthService } from "../../domain/services/IAuthService";
 
 
 @injectable()
-export class LoginUser extends Operation {
+export class AdminLogin extends Operation {
     constructor(@inject('authService') private authService: IAuthService) {
         super();
         this.setOutputs(['SUCCESS', 'BADREQUEST', 'ERROR']);
@@ -24,8 +24,7 @@ export class LoginUser extends Operation {
             if (!payload.password) {
                 this.emit(BADREQUEST, 'Password is Required')
             }
-
-            const jwtCode = await this.authService.login(payload.email, payload.password, 'user');
+            const jwtCode = await this.authService.login(payload.email, payload.password, 'admin');
             if (jwtCode) {
                 this.emit(SUCCESS, { token: jwtCode });
                 return;

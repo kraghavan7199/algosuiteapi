@@ -12,22 +12,22 @@ export class AuthService implements IAuthService {
         @inject('userRepo') private userRepository: IUserRepository
     ) {}
 
-    async register(name: string, email: string, password: string) {
+    async register(name: string, email: string, password: string, user_role: string) {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await this.userRepository.createUser(name, email, hashedPassword);
+        const result = await this.userRepository.createUser(name, email, hashedPassword, user_role);
         if(result && result) {
-            return sign({ userId: result.userId }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+            return sign({ userId: result.userId, role: user_role }, process.env.JWT_SECRET!, { expiresIn: "7d" });
         }
     }
 
-    async login(email: string, password: string): Promise<string | null> {
-        const user = await this.userRepository.getUserByEmail(email);
+    async login(email: string, password: string, user_role: string): Promise<string | null> {
+        const user = await this.userRepository.getUserByEmail(email, user_role);
         if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) return null;  
 
-        return sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+        return sign({ userId: user.id, role: user.user_role }, process.env.JWT_SECRET!, { expiresIn: "7d" });
     }
 
     verifyToken(token: string): any {
