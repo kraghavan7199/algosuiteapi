@@ -60,8 +60,8 @@ Comprehensive API documentation is available at [AlgoSuite API Docs](https://kra
 ## Technical Stack
 
 ### Core Technologies
-- **Node.js & TypeScript**
-  - Provides type safety and enhanced development experience
+- **Node.js & TypeScript** 
+  -Provides type safety and enhanced development experience
   - Ensures maintainable and scalable codebase
 
 - **PostgreSQL Database**
@@ -80,7 +80,6 @@ Comprehensive API documentation is available at [AlgoSuite API Docs](https://kra
 - **Inversify**
   - Implements dependency injection
   - Adheres to SOLID principles
-  - Improves code modularity and testability
 
 - **JWT Authentication**
   - Secure token-based authentication
