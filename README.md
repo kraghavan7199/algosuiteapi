@@ -12,16 +12,17 @@ AlgoSuite is a comprehensive API collection that provides powerful algorithmic a
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/algosuite.git
+git clone https://github.com/kraghavan7199/algosuiteapi.git
 
 # Navigate to project directory
-cd algosuite
+cd algosuiteapi
 
 # Install dependencies
 npm install
 
 # Set up environment variables
-cp .env.example .env
+PORT=3000
+DATABASE_URL=your_database_url
 # Edit .env file with your configurations
 
 # Set up database
